@@ -2,6 +2,8 @@
 
 namespace CultuurNet\Geocoding;
 
+use CultuurNet\Geocoding\Coordinate\Coordinates;
+
 interface GeocodingServiceInterface
 {
     /**
