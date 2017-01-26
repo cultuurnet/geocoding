@@ -28,4 +28,12 @@ abstract class Coordinate
     {
         return $this->value;
     }
+
+    /**
+     * @param Coordinate $coordinate
+     * @return bool
+     */
+    public function sameAs(Coordinate $coordinate) {
+        return $this->value === $coordinate->value;
+    }
 }

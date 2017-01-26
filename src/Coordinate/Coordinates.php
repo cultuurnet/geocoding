@@ -39,4 +39,13 @@ class Coordinates
     {
         return $this->long;
     }
+
+    /**
+     * @param Coordinates $coordinates
+     * @return bool
+     */
+    public function sameAs(Coordinates $coordinates) {
+        return $coordinates->getLatitude()->sameAs($this->lat) &&
+            $coordinates->getLongitude()->sameAs($this->long);
+    }
 }
