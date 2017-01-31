@@ -33,7 +33,8 @@ abstract class Coordinate
      * @param Coordinate $coordinate
      * @return bool
      */
-    public function sameAs(Coordinate $coordinate) {
+    public function sameAs(Coordinate $coordinate)
+    {
         return $this->value === $coordinate->value;
     }
 }

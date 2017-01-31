@@ -44,7 +44,8 @@ class Coordinates
      * @param Coordinates $coordinates
      * @return bool
      */
-    public function sameAs(Coordinates $coordinates) {
+    public function sameAs(Coordinates $coordinates)
+    {
         return $coordinates->getLatitude()->sameAs($this->lat) &&
             $coordinates->getLongitude()->sameAs($this->long);
     }
