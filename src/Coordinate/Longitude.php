@@ -8,8 +8,8 @@ class Longitude extends Coordinate
     {
         parent::__construct($value);
 
-        if ($value < -90 || $value > 90) {
-            throw new \InvalidArgumentException('Longitude should be between -90 and 90.');
+        if ($value < -180 || $value > 180) {
+            throw new \InvalidArgumentException('Longitude should be between --180 and 180.');
         }
     }
 }
