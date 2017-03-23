@@ -27,7 +27,7 @@ class CachedGeocodingServiceTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->cache = new ArrayCache();
-        $this->decoratee = $this->getMock(GeocodingServiceInterface::class);
+        $this->decoratee = $this->createMock(GeocodingServiceInterface::class);
         $this->service = new CachedGeocodingService($this->decoratee, $this->cache);
     }
 
