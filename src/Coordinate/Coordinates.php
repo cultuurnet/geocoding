@@ -49,4 +49,22 @@ class Coordinates
         return $coordinates->getLatitude()->sameAs($this->lat) &&
             $coordinates->getLongitude()->sameAs($this->long);
     }
+
+    /**
+     * @param string $latLon
+     * @return Coordinates
+     */
+    public static function fromLatLonString($latLon)
+    {
+        $split = explode(',', $latLon);
+
+        if (count($split) !== 2) {
+            throw new \InvalidArgumentException("Lat lon string is not in the expected format (lat,lon).");
+        }
+
+        $lat = new Latitude((double) $split[0]);
+        $lon = new Longitude((double) $split[1]);
+
+        return new Coordinates($lat, $lon);
+    }
 }

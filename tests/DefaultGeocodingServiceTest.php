@@ -22,7 +22,7 @@ class DefaultGeocodingServiceTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->geocoder = $this->getMock(GeocoderInterface::class);
+        $this->geocoder = $this->createMock(GeocoderInterface::class);
         $this->service = new DefaultGeocodingService($this->geocoder);
     }
 
