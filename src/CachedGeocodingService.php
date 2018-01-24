@@ -9,6 +9,8 @@ use Doctrine\Common\Cache\Cache;
 
 class CachedGeocodingService implements GeocodingServiceInterface
 {
+    const NO_COORDINATES_FOUND = 'NO_COORDINATES_FOUND';
+
     /**
      * @var GeocodingServiceInterface
      */
@@ -30,8 +32,7 @@ class CachedGeocodingService implements GeocodingServiceInterface
     }
 
     /**
-     * @param string $address
-     * @return Coordinates
+     * @inheritdoc
      */
     public function getCoordinates($address)
     {
@@ -39,6 +40,12 @@ class CachedGeocodingService implements GeocodingServiceInterface
 
         if ($encodedCacheData) {
             $cacheData = json_decode($encodedCacheData, true);
+
+            // Some addresses have no coordinates, to cache these addresses 'NO_COORDINATES_FOUND' is used as value.
+            // When the 'NO_COORDINATES_FOUND' cached value is found null is returned as coordinate.
+            if (self::NO_COORDINATES_FOUND === $cacheData) {
+                return null;
+            }
 
             if (isset($cacheData['lat']) && isset($cacheData['long'])) {
                 return new Coordinates(
@@ -50,14 +57,17 @@ class CachedGeocodingService implements GeocodingServiceInterface
 
         $coordinates = $this->geocodingService->getCoordinates($address);
 
-        $encodedCacheData = json_encode(
-            [
+        // Some addresses have no coordinates, to cache these addresses 'NO_COORDINATES_FOUND' is used as value.
+        // When null is passed in as the coordinates, then 'NO_COORDINATES_FOUND' is stored as cache value.
+        $cacheData = self::NO_COORDINATES_FOUND;
+        if ($coordinates) {
+            $cacheData = [
                 'lat' => $coordinates->getLatitude()->toDouble(),
                 'long' => $coordinates->getLongitude()->toDouble(),
-            ]
-        );
+            ];
+        }
 
-        $this->cache->save($address, $encodedCacheData);
+        $this->cache->save($address, json_encode($cacheData));
 
         return $coordinates;
     }

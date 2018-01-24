@@ -5,7 +5,9 @@ namespace CultuurNet\Geocoding;
 use CultuurNet\Geocoding\Coordinate\Coordinates;
 use CultuurNet\Geocoding\Coordinate\Latitude;
 use CultuurNet\Geocoding\Coordinate\Longitude;
+use Geocoder\Exception\NoResultException;
 use Geocoder\GeocoderInterface;
+use Psr\Log\LoggerInterface;
 
 class DefaultGeocodingService implements GeocodingServiceInterface
 {
@@ -15,25 +17,40 @@ class DefaultGeocodingService implements GeocodingServiceInterface
     private $geocoder;
 
     /**
-     * @param GeocoderInterface $geocoder
+     * @var LoggerInterface
      */
-    public function __construct(GeocoderInterface $geocoder)
-    {
+    private $logger;
+
+    /**
+     * @param GeocoderInterface $geocoder
+     * @param LoggerInterface $logger
+     */
+    public function __construct(
+        GeocoderInterface $geocoder,
+        LoggerInterface $logger
+    ) {
         $this->geocoder = $geocoder;
+        $this->logger = $logger;
     }
 
     /**
-     * @param string $address
-     * @return Coordinates
+     * @inheritdoc
      */
     public function getCoordinates($address)
     {
-        $result = $this->geocoder->geocode($address);
-        $coordinates = $result->getCoordinates();
+        try {
+            $result = $this->geocoder->geocode($address);
+            $coordinates = $result->getCoordinates();
 
-        return new Coordinates(
-            new Latitude((double) $coordinates[0]),
-            new Longitude((double) $coordinates[1])
-        );
+            return new Coordinates(
+                new Latitude((double)$coordinates[0]),
+                new Longitude((double)$coordinates[1])
+            );
+        } catch (NoResultException $exception) {
+            $this->logger->error(
+                'No results for address: "' . $address . '". Exception message: ' . $exception->getMessage()
+            );
+            return null;
+        }
     }
 }
