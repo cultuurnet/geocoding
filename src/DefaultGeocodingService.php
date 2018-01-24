@@ -24,8 +24,7 @@ class DefaultGeocodingService implements GeocodingServiceInterface
     }
 
     /**
-     * @param string $address
-     * @return Coordinates|null
+     * @inheritdoc
      */
     public function getCoordinates($address)
     {

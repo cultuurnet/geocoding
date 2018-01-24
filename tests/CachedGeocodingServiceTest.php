@@ -54,4 +54,23 @@ class CachedGeocodingServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedCoordinates, $freshCoordinates);
         $this->assertEquals($expectedCoordinates, $cachedCoordinates);
     }
+
+    /**
+     * @test
+     */
+    public function it_handles_null_coordinates_as_no_coordinates_found()
+    {
+        $address = 'Eikelberg (achter de bibliotheek), 8340 Sijsele (Damme), BE';
+
+        $this->decoratee->expects($this->once())
+            ->method('getCoordinates')
+            ->with($address)
+            ->willReturn(null);
+
+        $freshCoordinates = $this->service->getCoordinates($address);
+        $cachedCoordinates = $this->service->getCoordinates($address);
+
+        $this->assertNull($freshCoordinates);
+        $this->assertNull($cachedCoordinates);
+    }
 }
