@@ -58,7 +58,7 @@ class CachedGeocodingServiceTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_handles_null_coordinates_as_no_coordinates_found()
+    public function it_also_caches_when_no_coordinates_were_found()
     {
         $address = 'Eikelberg (achter de bibliotheek), 8340 Sijsele (Damme), BE';
 
