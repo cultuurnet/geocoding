@@ -8,7 +8,7 @@ interface GeocodingServiceInterface
 {
     /**
      * @param $address
-     * @return Coordinates
+     * @return Coordinates|null
      */
     public function getCoordinates($address);
 }

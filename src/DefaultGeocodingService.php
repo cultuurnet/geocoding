@@ -5,6 +5,7 @@ namespace CultuurNet\Geocoding;
 use CultuurNet\Geocoding\Coordinate\Coordinates;
 use CultuurNet\Geocoding\Coordinate\Latitude;
 use CultuurNet\Geocoding\Coordinate\Longitude;
+use Geocoder\Exception\NoResultException;
 use Geocoder\GeocoderInterface;
 
 class DefaultGeocodingService implements GeocodingServiceInterface
@@ -24,16 +25,20 @@ class DefaultGeocodingService implements GeocodingServiceInterface
 
     /**
      * @param string $address
-     * @return Coordinates
+     * @return Coordinates|null
      */
     public function getCoordinates($address)
     {
-        $result = $this->geocoder->geocode($address);
-        $coordinates = $result->getCoordinates();
+        try {
+            $result = $this->geocoder->geocode($address);
+            $coordinates = $result->getCoordinates();
 
-        return new Coordinates(
-            new Latitude((double) $coordinates[0]),
-            new Longitude((double) $coordinates[1])
-        );
+            return new Coordinates(
+                new Latitude((double)$coordinates[0]),
+                new Longitude((double)$coordinates[1])
+            );
+        } catch (NoResultException $exception) {
+            return null;
+        }
     }
 }
